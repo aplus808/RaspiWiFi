@@ -31,9 +31,12 @@ def wpa_settings():
 def save_credentials():
     ssid = request.form['ssid']
     wifi_key = request.form['wifi_key']
+    email_address = request.form['email_address']
 
     create_wpa_supplicant(ssid, wifi_key)
-    
+    update_email(email_address)
+    subprocess.run(["touch", "/etc/raspiwifi/client_first_boot"])
+   
     # Call set_ap_client_mode() in a thread otherwise the reboot will prevent
     # the response from getting to the browser
     def sleep_and_start_ap():
@@ -42,7 +45,7 @@ def save_credentials():
     t = Thread(target=sleep_and_start_ap)
     t.start()
 
-    return render_template('save_credentials.html', ssid = ssid)
+    return render_template('save_credentials.html', ssid = ssid, email_address = email_address)
 
 
 @app.route('/save_wpa_credentials', methods = ['GET', 'POST'])
@@ -50,6 +53,8 @@ def save_wpa_credentials():
     config_hash = config_file_hash()
     wpa_enabled = request.form.get('wpa_enabled')
     wpa_key = request.form['wpa_key']
+    email_address = request.form['email_address']
+    update_email(email_address)
 
     if str(wpa_enabled) == '1':
         update_wpa(1, wpa_key)
@@ -64,7 +69,7 @@ def save_wpa_credentials():
     t.start()
 
     config_hash = config_file_hash()
-    return render_template('save_wpa_credentials.html', wpa_enabled = config_hash['wpa_enabled'], wpa_key = config_hash['wpa_key'])
+    return render_template('save_wpa_credentials.html', wpa_enabled = config_hash['wpa_enabled'], wpa_key = config_hash['wpa_key'], email_address = email_address)
 
 
 
@@ -102,16 +107,16 @@ def create_wpa_supplicant(ssid, wifi_key):
 
     temp_conf_file.close
 
-    os.system('mv wpa_supplicant.conf.tmp /etc/wpa_supplicant/wpa_supplicant.conf')
+    subprocess.run(['mv wpa_supplicant.conf.tmp /etc/wpa_supplicant/wpa_supplicant.conf'])
 
 def set_ap_client_mode():
-    os.system('rm -f /etc/raspiwifi/host_mode')
-    os.system('rm /etc/cron.raspiwifi/aphost_bootstrapper')
-    os.system('cp /usr/lib/raspiwifi/reset_device/static_files/apclient_bootstrapper /etc/cron.raspiwifi/')
-    os.system('chmod +x /etc/cron.raspiwifi/apclient_bootstrapper')
-    os.system('mv /etc/dnsmasq.conf.original /etc/dnsmasq.conf')
-    os.system('mv /etc/dhcpcd.conf.original /etc/dhcpcd.conf')
-    os.system('cp /usr/lib/raspiwifi/reset_device/static_files/dnsmasq.service /etc/systemd/system/')
+    subprocess.run(["rm", "-f", "/etc/raspiwifi/host_mode"])
+    subprocess.run(["rm", "/etc/cron.raspiwifi/aphost_bootstrapper"])
+    subprocess.run(["cp", "/usr/lib/raspiwifi/reset_device/static_files/apclient_bootstrapper", "/etc/cron.raspiwifi/"])
+    subprocess.run(["chmod", "+x", "/etc/cron.raspiwifi/apclient_bootstrapper"])
+    subprocess.run(["mv", "/etc/dnsmasq.conf.original", "/etc/dnsmasq.conf"])
+    subprocess.run(["mv", "/etc/dhcpcd.conf.original", "/etc/dhcpcd.conf"])
+    subprocess.run(["cp", "/usr/lib/raspiwifi/reset_device/static_files/dnsmasq.service", "/etc/systemd/system/"])
     os.system('reboot')
 
 def update_wpa(wpa_enabled, wpa_key):
@@ -130,7 +135,15 @@ def update_wpa(wpa_enabled, wpa_key):
             if 'wpa_enabled=' not in line and 'wpa_key=' not in line:
                 print(line, end='')
 
-
+def update_email(email_address):
+    with fileinput.FileInput('/home/aplus808/flask/libs/reset_device/static_files/raspiwifi.conf', inplace=True) as raspiwifi_conf:
+        for line in raspiwifi_conf:
+            if 'email_address=' in line:
+                line_array = line.split('=')
+                line_array[1] = email_address
+                print(line_array[0] + '=' + line_array[1])
+            else:
+                print(line, end='')
 def config_file_hash():
     config_file = open('/etc/raspiwifi/raspiwifi.conf')
     config_hash = {}

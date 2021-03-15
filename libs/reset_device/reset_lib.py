@@ -1,6 +1,7 @@
 import os
 import fileinput
 import subprocess
+import email_sender
 
 def config_file_hash():
 	config_file = open('/etc/raspiwifi/raspiwifi.conf')
@@ -78,18 +79,19 @@ def is_wifi_active():
 
 def reset_to_host_mode():
 	if not os.path.isfile('/etc/raspiwifi/host_mode'):
-		os.system('aplay /usr/lib/raspiwifi/reset_device/button_chime.wav')
-		os.system('rm -f /etc/wpa_supplicant/wpa_supplicant.conf')
-		os.system('rm -f /home/pi/Projects/RaspiWifi/tmp/*')
-		os.system('rm /etc/cron.raspiwifi/apclient_bootstrapper')
-		os.system('cp /usr/lib/raspiwifi/reset_device/static_files/aphost_bootstrapper /etc/cron.raspiwifi/')
-		os.system('chmod +x /etc/cron.raspiwifi/aphost_bootstrapper')
-		os.system('mv /etc/dhcpcd.conf /etc/dhcpcd.conf.original')
-		os.system('cp /usr/lib/raspiwifi/reset_device/static_files/dhcpcd.conf /etc/')
-		os.system('mv /etc/dnsmasq.conf /etc/dnsmasq.conf.original')
-		os.system('cp /usr/lib/raspiwifi/reset_device/static_files/dnsmasq.conf /etc/')
-		os.system('cp /usr/lib/raspiwifi/reset_device/static_files/dhcpcd.conf /etc/')
-		os.system('pihole disable')
-		os.system('rm -f /etc/systemd/system/dnsmasq.service')
-		os.system('touch /etc/raspiwifi/host_mode')
-	os.system('reboot')
+		email_sender.send_reset_message()
+		subprocess.run(["aplay", "/usr/lib/raspiwifi/reset_device/button_chime.wav"])
+		subprocess.run("rm", "-f", "/etc/wpa_supplicant/wpa_supplicant.conf")
+		subprocess.run("rm", "-f", "/home/pi/Projects/RaspiWifi/tmp/*")
+		subprocess.run("rm", "/etc/cron.raspiwifi/apclient_bootstrapper")
+		subprocess.run("cp", "/usr/lib/raspiwifi/reset_device/static_files/aphost_bootstrapper", "/etc/cron.raspiwifi/")
+		subprocess.run("chmod", "+x", "/etc/cron.raspiwifi/aphost_bootstrapper")
+		subprocess.run("mv", "/etc/dhcpcd.conf", "/etc/dhcpcd.conf.original")
+		subprocess.run("cp", "/usr/lib/raspiwifi/reset_device/static_files/dhcpcd.conf", "/etc/")
+		subprocess.run("mv", "/etc/dnsmasq.conf", "/etc/dnsmasq.conf.original")
+		subprocess.run("cp", "/usr/lib/raspiwifi/reset_device/static_files/dnsmasq.conf", "/etc/")
+		subprocess.run("cp", "/usr/lib/raspiwifi/reset_device/static_files/dhcpcd.conf", "/etc/")
+		subprocess.run("pihole", "disable")
+		subprocess.run("rm", "-f", "/etc/systemd/system/dnsmasq.service")
+		subprocess.run("touch", "/etc/raspiwifi/host_mode")
+		os.system('reboot')
