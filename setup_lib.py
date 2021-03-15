@@ -4,7 +4,7 @@ def install_prereqs():
 	os.system('clear')
 	os.system('apt update')
 	os.system('clear')
-	os.system('apt install python3 python3-rpi.gpio python3-pip dnsmasq hostapd -y')
+	os.system('apt install python3 python3-rpi.gpio python3-pip dnsmasq hostapd ssmtp mailutils -y')
 	os.system('clear')
 	print("Installing Flask web server...")
 	print()
@@ -33,6 +33,8 @@ def copy_configs(wpa_enabled_choice):
 	os.system('echo "# RaspiWiFi Startup" >> /etc/crontab')
 	os.system('echo "@reboot root run-parts /etc/cron.raspiwifi/" >> /etc/crontab')
 	os.system('mv /usr/lib/raspiwifi/reset_device/static_files/raspiwifi.conf /etc/raspiwifi')
+	os.system('mv /etc/ssmtp/ssmtp.conf /etc/ssmtp/ssmtp.conf.original')
+	os.system('cp /usr/lib/raspiwifi/reset_device/static_files/ssmtp.conf /etc/ssmtp/ssmtp.conf')
 	os.system('touch /etc/raspiwifi/host_mode')
 
 def update_main_config_file(entered_ssid, auto_config_choice, auto_config_delay, ssl_enabled_choice, server_port_choice, wpa_enabled_choice, wpa_entered_key):

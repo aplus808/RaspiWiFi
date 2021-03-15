@@ -2,10 +2,12 @@ import time
 import sys
 import os
 import reset_lib
+from email_sender import send_ip_message
 
 no_conn_counter = 0
 consecutive_active_reports = 0
 config_hash = reset_lib.config_file_hash()
+send_ip_message()
 
 # If auto_config is set to 0 in /etc/raspiwifi/raspiwifi.conf exit this script
 if config_hash['auto_config'] == "0":
