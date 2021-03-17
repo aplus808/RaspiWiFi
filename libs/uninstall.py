@@ -1,7 +1,8 @@
-import os
+import subprocess
 import sys
+import os
 
-os.system('clear')
+subprocess.run("clear")
 print()
 print()
 print("#################################")
@@ -15,26 +16,27 @@ print()
 if (uninstall_answer.lower() == "y"):
     print('Uninstalling RaspiWiFi from your system...')
 
-    os.system('cp ' + os.path.dirname(os.path.realpath(__file__)) + '/reset_device/static_files/wpa_supplicant.conf.default /etc/wpa_supplicant/wpa_supplicant.conf')
-    os.system('chmod 600 /etc/wpa_supplicant/wpa_supplicant.conf')
-    os.system('mv /etc/wpa_supplicant/wpa_supplicant.conf.original /etc/wpa_supplicant/wpa_supplicant.conf 2>/dev/null')
-    os.system('rm -rf /etc/raspiwifi')
-    os.system('rm -rf /usr/lib/raspiwifi')
-    os.system('rm -rf /etc/cron.raspiwifi')
-    os.system('rm /etc/dnsmasq.conf')
-    os.system('mv /etc/dnsmasq.conf.original /etc/dnsmasq.conf 2>/dev/null')
-    os.system('rm /etc/hostapd/hostapd.conf')
-    os.system('rm /etc/dhcpcd.conf')
-    os.system('mv /etc/dhcpcd.conf.original /etc/dhcpcd.conf 2>/dev/null')
-    os.system('sed -i \'s/# RaspiWiFi Startup//\' /etc/crontab')
-    os.system('sed -i \'s/@reboot root run-parts \/etc\/cron.raspiwifi\///\' /etc/crontab')
+    subprocess.run(["cp", os.path.dirname(os.path.realpath(__file__)) + "/reset_device/static_files/wpa_supplicant.conf.default", "/etc/wpa_supplicant/wpa_supplicant.conf"])
+    subprocess.run(["chmod", "600", "/etc/wpa_supplicant/wpa_supplicant.conf"])
+    subprocess.run("mv /etc/wpa_supplicant/wpa_supplicant.conf.original /etc/wpa_supplicant/wpa_supplicant.conf 2>/dev/null", shell=True)
+    subprocess.run(["rm", "-rf", "/etc/raspiwifi"])
+    subprocess.run(["rm", "-rf", "/usr/lib/raspiwifi"])
+    subprocess.run(["rm", "-rf", "/etc/cron.raspiwifi"])
+    subprocess.run(["rm", "/etc/dnsmasq.conf"])
+    subprocess.run("mv /etc/dnsmasq.conf.original /etc/dnsmasq.conf 2>/dev/null", shell=True)
+    subprocess.run("mv /etc/ssmtp/ssmtp.conf.original /etc/ssmtp/ssmtp.conf 2>/dev/null", shell=True)
+    subprocess.run(["rm", "/etc/hostapd/hostapd.conf"])
+    subprocess.run(["rm", "/etc/dhcpcd.conf"])
+    subprocess.run("mv /etc/dhcpcd.conf.original /etc/dhcpcd.conf 2>/dev/null", shell=True)
+    subprocess.run('sed -i \'s/# RaspiWiFi Startup//\' /etc/crontab', shell=True)
+    subprocess.run('sed -i \'s/@reboot root run-parts \/etc\/cron.raspiwifi\///\' /etc/crontab', shell=True)
     
     print()
     print()
     reboot_answer = input('Uninstallation is complete. Would you like to reboot the system now?: ')
 
     if(reboot_answer.lower() == "y"):
-        os.system('reboot')
+        subprocess.run("reboot")
 else:
     print()
     print('No changes made. Exiting unistaller...')
