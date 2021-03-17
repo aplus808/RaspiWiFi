@@ -63,7 +63,7 @@ def save_wpa_credentials():
 
     def sleep_and_reboot_for_wpa():
         time.sleep(2)
-        os.system('reboot')
+        subprocess.run("reboot")
 
     t = Thread(target=sleep_and_reboot_for_wpa)
     t.start()
@@ -117,7 +117,7 @@ def set_ap_client_mode():
     subprocess.run(["mv", "/etc/dnsmasq.conf.original", "/etc/dnsmasq.conf"])
     subprocess.run(["mv", "/etc/dhcpcd.conf.original", "/etc/dhcpcd.conf"])
     subprocess.run(["cp", "/usr/lib/raspiwifi/reset_device/static_files/dnsmasq.service", "/etc/systemd/system/"])
-    os.system('reboot')
+    subprocess.run("reboot")
 
 def update_wpa(wpa_enabled, wpa_key):
     with fileinput.FileInput('/etc/raspiwifi/raspiwifi.conf', inplace=True) as raspiwifi_conf:
