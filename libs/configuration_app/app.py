@@ -107,7 +107,7 @@ def create_wpa_supplicant(ssid, wifi_key):
 
     temp_conf_file.close
 
-    subprocess.run(['mv wpa_supplicant.conf.tmp /etc/wpa_supplicant/wpa_supplicant.conf'])
+    subprocess.run(["mv", "wpa_supplicant.conf.tmp", "/etc/wpa_supplicant/wpa_supplicant.conf"])
 
 def set_ap_client_mode():
     subprocess.run(["rm", "-f", "/etc/raspiwifi/host_mode"])
@@ -136,7 +136,7 @@ def update_wpa(wpa_enabled, wpa_key):
                 print(line, end='')
 
 def update_email(email_address):
-    with fileinput.FileInput('/home/aplus808/flask/libs/reset_device/static_files/raspiwifi.conf', inplace=True) as raspiwifi_conf:
+    with fileinput.FileInput('/etc/raspiwifi/raspiwifi.conf', inplace=True) as raspiwifi_conf:
         for line in raspiwifi_conf:
             if 'email_address=' in line:
                 line_array = line.split('=')
