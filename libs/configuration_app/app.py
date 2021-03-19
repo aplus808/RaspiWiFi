@@ -115,7 +115,8 @@ def set_ap_client_mode():
     subprocess.run(["cp", "/usr/lib/raspiwifi/reset_device/static_files/apclient_bootstrapper", "/etc/cron.raspiwifi/"])
     subprocess.run(["chmod", "+x", "/etc/cron.raspiwifi/apclient_bootstrapper"])
     subprocess.run(["mv", "/etc/dnsmasq.conf.original", "/etc/dnsmasq.conf"])
-    subprocess.run(["mv", "/etc/dhcpcd.conf.original", "/etc/dhcpcd.conf"])
+    # subprocess.run(["mv", "/etc/dhcpcd.conf.original", "/etc/dhcpcd.conf"])
+    subprocess.run(["cp", "/usr/lib/raspiwifi/reset_device/static_files/dhcpcd.conf.host", "/etc/dhcpcd.conf"])
     subprocess.run(["cp", "/usr/lib/raspiwifi/reset_device/static_files/dnsmasq.service", "/etc/systemd/system/"])
     subprocess.run("reboot")
 

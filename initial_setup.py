@@ -59,7 +59,7 @@ else:
 	print()
 	sys.exit()
 
-subprocess.run("clear")
+# subprocess.run("clear")
 print()
 print()
 print("#####################################")

@@ -27,7 +27,7 @@ def copy_configs(wpa_enabled_choice):
 		subprocess.run(["cp", "/usr/lib/raspiwifi/reset_device/static_files/hostapd.conf.nowpa", "/etc/hostapd/hostapd.conf"])
 	
 	subprocess.run(["mv", "/etc/dhcpcd.conf", "/etc/dhcpcd.conf.original"])
-	subprocess.run(["cp", "/usr/lib/raspiwifi/reset_device/static_files/dhcpcd.conf", "/etc/"])
+	subprocess.run(["cp", "/usr/lib/raspiwifi/reset_device/static_files/dhcpcd.conf.host", "/etc/dhcpcd.conf"])
 	subprocess.run(["mkdir", "/etc/cron.raspiwifi"])
 	subprocess.run(["cp", "/usr/lib/raspiwifi/reset_device/static_files/aphost_bootstrapper", "/etc/cron.raspiwifi"])
 	subprocess.run(["chmod", "+x", "/etc/cron.raspiwifi/aphost_bootstrapper"])
