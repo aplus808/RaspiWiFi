@@ -2,22 +2,22 @@ import os
 import subprocess
 
 def install_prereqs():
-	subprocess.run("clear")
-	subprocess.run(["apt", "update"])
-	subprocess.run("clear")
-	subprocess.run(["apt", "install", "-y", "python3-rpi.gpio", "python3-pip", "dnsmasq", "hostapd", "ssmtp", "mailutils"])
-	subprocess.run("clear")
+	# subprocess.run("clear")
+	# subprocess.run(["apt", "update"])
+	# subprocess.run("clear")
+	# subprocess.run(["apt", "install", "-y", "python3-rpi.gpio", "python3-pip", "dnsmasq", "hostapd", "ssmtp", "mailutils"])
+	# subprocess.run("clear")
 	print("Installing Flask web server...")
 	print()
 	subprocess.run(["pip3", "install", "flask", "pyopenssl"])
-	subprocess.run("clear")
+	# subprocess.run("clear")
 
 def copy_configs(wpa_enabled_choice):
 	subprocess.run(["mkdir", "/usr/lib/raspiwifi"])
 	subprocess.run(["mkdir", "/etc/raspiwifi"])
-	subprocess.run(["cp", "-a", "libs/*", "/usr/lib/raspiwifi/"])
+	subprocess.run('cp -a libs/* /usr/lib/raspiwifi/', shell=True)
 	subprocess.run(["mv", "/etc/wpa_supplicant/wpa_supplicant.conf", "/etc/wpa_supplicant/wpa_supplicant.conf.original"])
-	subprocess.run(["rm", "-f", "./tmp/*"])
+	subprocess.run('rm -f ./tmp/*', shell=True)
 	subprocess.run(["mv", "/etc/dnsmasq.conf", "/etc/dnsmasq.conf.original"])
 	subprocess.run(["cp", "/usr/lib/raspiwifi/reset_device/static_files/dnsmasq.conf", "/etc/"])
 
