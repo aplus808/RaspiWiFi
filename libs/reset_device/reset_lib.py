@@ -82,7 +82,7 @@ def reset_to_host_mode():
 		email_sender.send_reset_message()
 		subprocess.run(["aplay", "/usr/lib/raspiwifi/reset_device/button_chime.wav"])
 		subprocess.run(["rm", "-f", "/etc/wpa_supplicant/wpa_supplicant.conf"])
-		subprocess.run(["rm", "-f", "/home/pi/Projects/RaspiWifi/tmp/*"])
+		subprocess.run('rm -f" /home/pi/Projects/RaspiWifi/tmp/*', shell=True)
 		subprocess.run(["rm", "/etc/cron.raspiwifi/apclient_bootstrapper"])
 		subprocess.run(["cp", "/usr/lib/raspiwifi/reset_device/static_files/aphost_bootstrapper", "/etc/cron.raspiwifi/"])
 		subprocess.run(["chmod", "+x", "/etc/cron.raspiwifi/aphost_bootstrapper"])
