@@ -8,7 +8,7 @@ if os.getuid():
     sys.exit('You need root access to install!')
 
 
-subprocess.run("clear")
+# subprocess.run("clear")
 print()
 print()
 print("###################################")
@@ -32,7 +32,7 @@ server_port_choice = input("Which port would you like to use for the Configurati
 print()
 # ssl_enabled_choice = input("Would you like to enable SSL during configuration mode \n(NOTICE: you will get a certificate ID error \nwhen connecting, but traffic will be encrypted) [y/N]?: ")
 ssl_enabled_choice = 'N'
-subprocess.run("clear")
+# subprocess.run("clear")
 print()
 print()
 install_ans = input("Are you ready to commit changes to the system? [y/N]: ")
@@ -41,6 +41,9 @@ if(install_ans.lower() == 'y'):
 	setup_lib.install_prereqs()
 	setup_lib.copy_configs(wpa_enabled_choice)
 	setup_lib.update_main_config_file(entered_ssid, auto_config_choice, auto_config_delay, ssl_enabled_choice, server_port_choice, wpa_enabled_choice, wpa_entered_key)
+	if os.path.isfile('/etc/hostapd/hostapd.conf'):
+		subprocess.run(["systemctl", "unmask", "hostapd.service"])
+		subprocess.run(["systemctl", "enable", "hostapd.service"])
 	subprocess.run(["pihole", "disable"])
 else:
 	print()
